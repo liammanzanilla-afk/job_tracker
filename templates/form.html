@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ "Edit" if record else "Add" }} {{ config.title }}</h1>
+
+<form method="POST" class="form-container">
+
+    {% for field, label, field_type in config.fields %}
+
+    <div class="mb-3">
+        <label class="form-label">{{ label }}</label>
+
+        {% if field_type == "company" %}
+            <select name="{{ field }}" class="form-select">
+                <option value="">Select Company</option>
+                {% for company in options.companies %}
+                    <option value="{{ company.company_id }}"
+                    {% if record.get(field)|string == company.company_id|string %}selected{% endif %}>
+                        {{ company.company_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        {% elif field_type == "job" %}
+            <select name="{{ field }}" class="form-select">
+                <option value="">Select Job</option>
+                {% for job in options.jobs %}
+                    <option value="{{ job.job_id }}"
+                    {% if record.get(field)|string == job.job_id|string %}selected{% endif %}>
+                        {{ job.job_title }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        {% elif field_type == "job_type" %}
+            <select name="{{ field }}" class="form-select">
+                {% for option in ["Full-time", "Part-time", "Contract", "Internship"] %}
+                    <option value="{{ option }}"
+                    {% if record.get(field) == option %}selected{% endif %}>
+                        {{ option }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        {% elif field_type == "status" %}
+            <select name="{{ field }}" class="form-select">
+                {% for option in ["Applied", "Screening", "Interview", "Offer", "Rejected", "Withdrawn"] %}
+                    <option value="{{ option }}"
+                    {% if record.get(field) == option %}selected{% endif %}>
+                        {{ option }}
+                    </option>
+                {% endfor %}
+            </select>
+
+        {% elif field_type == "textarea" %}
+            <textarea name="{{ field }}" class="form-control"
+                      rows="3">{{ record.get(field) or "" }}</textarea>
+
+        {% elif field_type == "json" %}
+            <textarea name="{{ field }}" class="form-control"
+                      rows="4"
+                      placeholder='Example: ["Python", "SQL", "Flask"]'>{{ record.get(field) if record.get(field) is string else (record.get(field)|tojson if record.get(field) else "") }}</textarea>
+
+        {% elif field_type == "checkbox" %}
+            <input type="checkbox" name="{{ field }}"
+                   class="form-check-input"
+                   {% if record.get(field) %}checked{% endif %}>
+            <small class="text-muted">Check if yes.</small>
+
+        {% else %}
+            <input type="{{ field_type }}"
+                   name="{{ field }}"
+                   class="form-control"
+                   value="{{ record.get(field) or '' }}"
+                   {% if field == "company_name" or field == "job_title" or field == "contact_name" or field == "application_date" %}required{% endif %}>
+        {% endif %}
+    </div>
+
+    {% endfor %}
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="/{{ entity }}" class="btn btn-secondary">Cancel</a>
+
+</form>
+
+{% endblock %}

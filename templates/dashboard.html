@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="mb-4">Job Application Dashboard</h1>
+
+<p class="text-muted">
+    Welcome to your personal job application tracker.
+</p>
+
+<div class="row g-3">
+
+    <div class="col-md-3">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5>Companies</h5>
+                <h2>{{ stats.companies }}</h2>
+                <a href="/companies">View Companies</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5>Jobs</h5>
+                <h2>{{ stats.jobs }}</h2>
+                <a href="/jobs">View Jobs</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5>Applications</h5>
+                <h2>{{ stats.applications }}</h2>
+                <a href="/applications">View Applications</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card dashboard-card">
+            <div class="card-body">
+                <h5>Contacts</h5>
+                <h2>{{ stats.contacts }}</h2>
+                <a href="/contacts">View Contacts</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<h3 class="mt-5">Recent Applications</h3>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Job</th>
+            <th>Company</th>
+            <th>Date Applied</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for application in recent_applications %}
+        <tr>
+            <td>{{ application.job_title or "Unassigned" }}</td>
+            <td>{{ application.company_name or "Unknown" }}</td>
+            <td>{{ application.application_date }}</td>
+            <td>{{ application.status }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">No applications added yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
