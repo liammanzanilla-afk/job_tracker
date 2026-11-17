@@ -57,10 +57,17 @@
             <textarea name="{{ field }}" class="form-control"
                       rows="3">{{ record.get(field) or "" }}</textarea>
 
+
         {% elif field_type == "json" %}
-            <textarea name="{{ field }}" class="form-control"
-                      rows="4"
-                      placeholder='Example: ["Python", "SQL", "Flask"]'>{{ record.get(field) if record.get(field) is string else (record.get(field)|tojson if record.get(field) else "") }}</textarea>
+            <textarea name="{{ field }}"
+                        class="form-control"
+                        rows="5"
+                        placeholder='["Python", "SQL", "Flask"]'>{% if record.get(field) %}{{ record.get(field)|tojson if record.get(field) is not string else record.get(field) }}{% endif %}</textarea>
+            <small class="text-muted">
+                    Enter valid JSON. For job skills, use:
+                    ["Python", "SQL", "Flask"]
+            </small>
+
 
         {% elif field_type == "checkbox" %}
             <input type="checkbox" name="{{ field }}"
